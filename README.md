@@ -8,32 +8,7 @@ This project focuses on **Behavioral Analysis**—a methodology that looks beyon
 
 ---
 
-## 🧱 2️⃣ Repository Structure
-
-This repository is meticulously organized to simulate a professional incident response documentation workflow. Each folder serves a specific investigative purpose:
-
-```text
-├── README.md
-│   └── The primary documentation file providing context, methodology, and theoretical background.
-├── reports/
-│   └── malware_classification_report.md
-│       └── A comprehensive document detailing the specific findings for each analyzed sample.
-├── samples/
-│   └── known_malware_hashes.txt
-│       └── A text file containing only the MD5/SHA256 hashes of the samples. 
-│           (SAFETY NOTE: No executable malware is hosted here).
-├── screenshots/
-│   └── virustotal_detection_results.png
-│       └── Visual evidence of the analysis, including detection ratios and behavior graphs.
-└── notes/
-    └── behavior_analysis_notes.md
-        └── Raw observations, scratchpad notes on IOCs, and initial hypotheses formed during analysis.
-
-```
-
----
-
-## 🎯 3️⃣ Project Objectives
+## 🎯 2️⃣ Project Objectives
 
 The primary goal of this project is to bridge the gap between theoretical knowledge of malware and practical identification skills.
 
@@ -44,7 +19,7 @@ The primary goal of this project is to bridge the gap between theoretical knowle
 
 ---
 
-## 🛠️ 4️⃣ Tools & Platforms Used
+## 🛠️ 3️⃣ Tools & Platforms Used
 
 ### 🟢 VirusTotal (Primary Analysis Engine)
 
@@ -58,7 +33,7 @@ The primary goal of this project is to bridge the gap between theoretical knowle
 
 ---
 
-## 🦠 5️⃣ Malware Types Explained in Depth
+## 🦠 4️⃣ Malware Types Explained in Depth
 
 This section details the four malware categories analyzed in this project.
 
@@ -92,7 +67,7 @@ This section details the four malware categories analyzed in this project.
 
 ---
 
-## 🔬 6️⃣ Step-by-Step Methodology
+## 🔬 5️⃣ Step-by-Step Methodology
 
 The analysis was conducted following a strict safe-handling protocol:
 
@@ -101,11 +76,11 @@ The analysis was conducted following a strict safe-handling protocol:
 3. **Detection Ratio Analysis:** I evaluated the "Score" (e.g., 65/72 vendors). A high score confirms malicious intent, while specific vendor names (e.g., `Ransom.WannaCry`) help in classification.
 4. **Behavioral Observation:** I navigated to the "Behavior" and "Relations" tabs to observe what the file *attempted* to do in the sandbox.
 5. **Lifecycle Mapping:** I correlated the observed technical actions (e.g., creating a registry key) with the malware's intent (e.g., Persistence).
-6. **Documentation:** All findings were recorded in the `reports/` directory.
+6. **Documentation:** All findings were recorded in the project reports.
 
 ---
 
-## 🚩 7️⃣ Behavior Analysis Indicators (Detailed)
+## 🚩 6️⃣ Behavior Analysis Indicators (Detailed)
 
 This project identified specific technical indicators that serve as evidence of malicious activity.
 
@@ -130,7 +105,7 @@ This project identified specific technical indicators that serve as evidence of 
 
 ---
 
-## 🔄 8️⃣ Malware Lifecycle Explanation
+## 🔄 7️⃣ Malware Lifecycle Explanation
 
 Understanding the lifecycle helps in disrupting the attack.
 
@@ -143,7 +118,7 @@ Understanding the lifecycle helps in disrupting the attack.
 
 ---
 
-## 🛡️ 9️⃣ Prevention & Mitigation Strategies
+## 🛡️ 8️⃣ Prevention & Mitigation Strategies
 
 Based on the analysis, the following defense mechanisms are critical:
 
@@ -154,11 +129,11 @@ Based on the analysis, the following defense mechanisms are critical:
 
 ---
 
-## 📦 🔟 Deliverables
+## 📦 9️⃣ Deliverables
 
-* [x] **Malware Classification Report:** A detailed technical breakdown in the `reports/` folder.
-* [x] **Behavior Analysis Notes:** Raw data and observations in the `notes/` folder.
-* [x] **Screenshots:** Visual proof of detection and graph analysis in the `screenshots/` folder.
+* [x] **Malware Classification Report:** A detailed technical breakdown of findings.
+* [x] **Behavior Analysis Notes:** Raw data and observations.
+* [x] **Screenshots:** Visual proof of detection and graph analysis.
 
 ---
 
@@ -180,4 +155,4 @@ By completing this task, I have developed a foundational understanding of **Malw
 ---
 
 *Author: Avijit Baidya*
-*Date: Jan,23-2025*
+*Date: Jan, 2026*
