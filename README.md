@@ -1,5 +1,4 @@
 # Task-6-Introduction-to-Cryptography
-# Task 6 – Introduction to Cryptography
 
 ## Project Overview
 
