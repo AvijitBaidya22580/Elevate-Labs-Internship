@@ -123,4 +123,3 @@ Upon completion, learners will possess the practical skills to identify critical
 
 ---
 
-**Would you like me to generate a sample `remediation_guide.pdf` outline or perhaps a custom `docker-compose.yml` to help set up a safe lab environment for this task?**
