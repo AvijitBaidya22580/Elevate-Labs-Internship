@@ -1,4 +1,4 @@
-# 🛡️ Malware Types & Behavior Analysis (Basic)
+# Task 5: Malware Types & Behavior Analysis (Basic)
 
 ## 📖 1️⃣ Introduction
 
