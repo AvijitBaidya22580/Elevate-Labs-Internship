@@ -7,8 +7,8 @@
 <h1 align="center">🛡️ Web Application Vulnerability Scanner</h1>
 
 <p align="center">
-  <strong>Internship Project – ELEVATS LAB</strong><br>
-  NATTO MUNI CHAKMA | Andhra University
+  <strong>Internship Project – ELEVATE LAB</strong><br>
+  Avijit Baidya | Andhra University
 </p>
 
 <p align="center">
@@ -375,5 +375,5 @@ This project reflects professional-level implementation of automated web securit
   </a>
 </p>
 
-Intern @ **ELEVATS LAB**  
+Intern @ **ELEVATE LAB**  
 
