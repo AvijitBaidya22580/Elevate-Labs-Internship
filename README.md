@@ -367,10 +367,10 @@ This project reflects professional-level implementation of automated web securit
 ## Connect with Me 🔗
 
 <p align="left">
-  <a href="https://www.linkedin.com/in/natto-muni-chakma-4b19b4259/">
+  <a href="(https://www.linkedin.com/in/avijit-baidya-07b817238)">
     <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/>
   </a>
-  <a href="https://github.com/NATTOMR">
+  <a href="https://github.com/AvijitBaidya22580">
     <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/>
   </a>
 </p>
