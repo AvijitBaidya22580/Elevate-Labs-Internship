@@ -191,6 +191,6 @@ By completing this project, I have gained proficiency in:
 ### 👤 Author
 
 Avijit Baidya
-* **GitHub:** [Your GitHub Profile]
+* **GitHub:** https://github.com/AvijitBaidya22580
 
 *If you found this project helpful or have suggestions, feel free to open an issue or pull request!*
