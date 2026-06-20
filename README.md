@@ -1,4 +1,3 @@
-# Web-Application-Vulnerability-Scanner
 
 <p align="center">
   <img src="https://img.shields.io/badge/Web%20Security-Vulnerability%20Scanner-red?style=for-the-badge&logo=shield&logoColor=white" alt="Web Security Vulnerability Scanner" />
@@ -375,5 +374,4 @@ This project reflects professional-level implementation of automated web securit
   </a>
 </p>
 
-Intern @ **ELEVATE LAB**  
-
+Avijit Baidya
