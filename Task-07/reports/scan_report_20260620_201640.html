@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Scan Report - https://tryhackme.com/room/winadbasics</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --bg-base: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            
+            --color-critical: #ef4444;
+            --color-critical-bg: #fef2f2;
+            --color-high: #f97316;
+            --color-high-bg: #fff7ed;
+            --color-medium: #eab308;
+            --color-medium-bg: #fef9c3;
+            --color-low: #3b82f6;
+            --color-low-bg: #eff6ff;
+            --color-info: #10b981;
+            --color-info-bg: #ecfdf5;
+            
+            --primary: #4f46e5;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 2rem;
+            line-height: 1.5;
+        }
+
+        .report-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+            padding: 3rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo-title h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .logo-title p {
+            margin: 0.25rem 0 0 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .badge-generation {
+            background: #f1f5f9;
+            color: var(--text-secondary);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .meta-card {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.25rem;
+        }
+
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .meta-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .meta-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .meta-value {
+            font-weight: 600;
+            color: var(--text-primary);
+            word-break: break-all;
+        }
+
+        .stats-summary {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            flex: 1;
+            padding: 1.25rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-val {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-lbl {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .stat-card.critical { background: var(--color-critical-bg); border-color: rgba(239, 68, 68, 0.2); color: var(--color-critical); }
+        .stat-card.high { background: var(--color-high-bg); border-color: rgba(249, 115, 22, 0.2); color: var(--color-high); }
+        .stat-card.medium { background: var(--color-medium-bg); border-color: rgba(234, 179, 8, 0.2); color: var(--color-medium); }
+        .stat-card.low { background: var(--color-low-bg); border-color: rgba(59, 130, 246, 0.2); color: var(--color-low); }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1.25rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2.5rem;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: #f1f5f9;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 2px solid var(--border-color);
+            text-align: left;
+        }
+
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge.critical { background: var(--color-critical-bg); color: var(--color-critical); border: 1px solid rgba(239,68,68,0.2); }
+        .badge.high { background: var(--color-high-bg); color: var(--color-high); border: 1px solid rgba(249,115,22,0.2); }
+        .badge.medium { background: var(--color-medium-bg); color: var(--color-medium); border: 1px solid rgba(234,179,8,0.2); }
+        .badge.low { background: var(--color-low-bg); color: var(--color-low); border: 1px solid rgba(59,130,246,0.2); }
+        .badge.info { background: var(--color-info-bg); color: var(--color-info); border: 1px solid rgba(16,185,129,0.2); }
+
+        .vuln-item {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .vuln-head {
+            background: #f8fafc;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .vuln-head-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .vuln-title {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .vuln-body {
+            padding: 1.5rem;
+        }
+
+        .detail-row {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .detail-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .lbl {
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .val {
+            word-break: break-all;
+        }
+
+        code, pre {
+            font-family: 'Courier New', Courier, monospace;
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            display: block;
+            margin-top: 0.25rem;
+            white-space: pre-wrap;
+            border: 1px solid #1e293b;
+        }
+
+        .ethical-footer {
+            margin-top: 3rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.5rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Header -->
+        <header>
+            <div class="logo-title">
+                <h1>Web Vulnerability Assessment Report</h1>
+                <p>Security Audit Summary</p>
+            </div>
+            <div class="badge-generation">
+                Generated: 2026-06-20 20:16:40
+            </div>
+        </header>
+
+        <!-- Metadata -->
+        <div class="meta-grid">
+            <div class="meta-card">
+                <div class="meta-row">
+                    <span class="meta-label">Target URL:</span>
+                    <span class="meta-value">https://tryhackme.com/room/winadbasics</span>
+                </div>
+                <div class="meta-row">
+                    <span class="meta-label">Scan Initiation:</span>
+                    <span class="meta-value">2026-06-20 20:16:39</span>
+                </div>
+                <div class="meta-row">
+                    <span class="meta-label">Scan Duration:</span>
+                    <span class="meta-value">1.22 seconds</span>
+                </div>
+            </div>
+            <div class="meta-card">
+                <div class="meta-row">
+                    <span class="meta-label">Pages Crawled:</span>
+                    <span class="meta-value">1</span>
+                </div>
+                <div class="meta-row">
+                    <span class="meta-label">Forms Discovered:</span>
+                    <span class="meta-value">0</span>
+                </div>
+                <div class="meta-row">
+                    <span class="meta-label">Total Vulnerabilities:</span>
+                    <span class="meta-value" style="color: var(--color-critical);">
+                        4
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Severity Distribution -->
+        
+        
+            
+            
+                
+            
+        
+            
+            
+                
+            
+        
+            
+            
+                
+            
+        
+            
+            
+                
+            
+        
+
+        <div class="stats-summary">
+            <div class="stat-card critical">
+                <div class="stat-val">0</div>
+                <div class="stat-lbl">Critical</div>
+            </div>
+            <div class="stat-card high">
+                <div class="stat-val">0</div>
+                <div class="stat-lbl">High</div>
+            </div>
+            <div class="stat-card medium">
+                <div class="stat-val">0</div>
+                <div class="stat-lbl">Medium</div>
+            </div>
+            <div class="stat-card low">
+                <div class="stat-val">4</div>
+                <div class="stat-lbl">Low / Info</div>
+            </div>
+        </div>
+
+        <!-- Findings List Table -->
+        <h2>Summary of Findings</h2>
+        
+            <table>
+                <thead>
+                    <tr>
+                        <th>Severity</th>
+                        <th>Vulnerability Class</th>
+                        <th>OWASP Category</th>
+                        <th>Method</th>
+                        <th>Resource Path</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                        <tr>
+                            <td><span class="badge low">Low</span></td>
+                            <td><strong>Missing X-Frame-Options Header</strong></td>
+                            <td>A05:2025-Security Misconfiguration</td>
+                            <td><code>HEAD/GET</code></td>
+                            <td style="word-break: break-all;">https://tryhackme.com/room/winadbasics</td>
+                        </tr>
+                    
+                        <tr>
+                            <td><span class="badge low">Low</span></td>
+                            <td><strong>Missing X-Content-Type-Options Header</strong></td>
+                            <td>A05:2025-Security Misconfiguration</td>
+                            <td><code>HEAD/GET</code></td>
+                            <td style="word-break: break-all;">https://tryhackme.com/room/winadbasics</td>
+                        </tr>
+                    
+                        <tr>
+                            <td><span class="badge low">Low</span></td>
+                            <td><strong>Missing Content-Security-Policy Header</strong></td>
+                            <td>A05:2025-Security Misconfiguration</td>
+                            <td><code>HEAD/GET</code></td>
+                            <td style="word-break: break-all;">https://tryhackme.com/room/winadbasics</td>
+                        </tr>
+                    
+                        <tr>
+                            <td><span class="badge low">Low</span></td>
+                            <td><strong>Missing Strict-Transport-Security Header</strong></td>
+                            <td>A05:2025-Security Misconfiguration</td>
+                            <td><code>HEAD/GET</code></td>
+                            <td style="word-break: break-all;">https://tryhackme.com/room/winadbasics</td>
+                        </tr>
+                    
+                </tbody>
+            </table>
+        
+
+        <!-- Detailed Vulnerability Disclosures -->
+        
+            <h2>Detailed Vulnerability Reports</h2>
+            
+                <div class="vuln-item">
+                    <div class="vuln-head">
+                        <div class="vuln-head-left">
+                            <span class="badge low">Low</span>
+                            <span class="vuln-title">Missing X-Frame-Options Header</span>
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">OWASP: A05:2025-Security Misconfiguration</div>
+                    </div>
+                    <div class="vuln-body">
+                        <div class="detail-row">
+                            <div class="lbl">Vulnerable URL:</div>
+                            <div class="val"><code>[HEAD/GET] https://tryhackme.com/room/winadbasics</code></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="lbl">Vulnerable Parameter:</div>
+                            <div class="val"><code>HTTP Headers</code></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="lbl">Threat Description:</div>
+                            <div class="val">Protects against clickjacking attacks.</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="lbl">Test Payload:</div>
+                            <div class="val"><code>N/A (Passive Header Scan)</code></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="lbl">Evidence Captured:</div>
+                            <div class="val">
+                                <pre>Header 'X-Frame-Options' is missing in HTTP response.</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="vuln-item">
+                    <div class="vuln-head">
+                        <div class="vuln-head-left">
+                            <span class="badge low">Low</span>
+                            <span class="vuln-title">Missing X-Content-Type-Options Header</span>
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">OWASP: A05:2025-Security Misconfiguration</div>
+                    </div>
+                    <div class="vuln-body">
+                        <div class="detail-row">
+                            <div class="lbl">Vulnerable URL:</div>
+                            <div class="val"><code>[HEAD/GET] https://tryhackme.com/room/winadbasics</code></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="lbl">Vulnerable Parameter:</div>
+                            <div class="val"><code>HTTP Headers</code></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="lbl">Threat Description:</div>
+                            <div class="val">Prevents the browser from MIME-sniffing a response away from the declared content-type.</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="lbl">Test Payload:</div>
+                            <div class="val"><code>N/A (Passive Header Scan)</code></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="lbl">Evidence Captured:</div>
+                            <div class="val">
+                                <pre>Header 'X-Content-Type-Options' is missing in HTTP response.</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="vuln-item">
+                    <div class="vuln-head">
+                        <div class="vuln-head-left">
+                            <span class="badge low">Low</span>
+                            <span class="vuln-title">Missing Content-Security-Policy Header</span>
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">OWASP: A05:2025-Security Misconfiguration</div>
+                    </div>
+                    <div class="vuln-body">
+                        <div class="detail-row">
+                            <div class="lbl">Vulnerable URL:</div>
+                            <div class="val"><code>[HEAD/GET] https://tryhackme.com/room/winadbasics</code></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="lbl">Vulnerable Parameter:</div>
+                            <div class="val"><code>HTTP Headers</code></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="lbl">Threat Description:</div>
+                            <div class="val">Restricts resources (such as JavaScript, CSS, Images) that the browser is allowed to load.</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="lbl">Test Payload:</div>
+                            <div class="val"><code>N/A (Passive Header Scan)</code></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="lbl">Evidence Captured:</div>
+                            <div class="val">
+                                <pre>Header 'Content-Security-Policy' is missing in HTTP response.</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="vuln-item">
+                    <div class="vuln-head">
+                        <div class="vuln-head-left">
+                            <span class="badge low">Low</span>
+                            <span class="vuln-title">Missing Strict-Transport-Security Header</span>
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">OWASP: A05:2025-Security Misconfiguration</div>
+                    </div>
+                    <div class="vuln-body">
+                        <div class="detail-row">
+                            <div class="lbl">Vulnerable URL:</div>
+                            <div class="val"><code>[HEAD/GET] https://tryhackme.com/room/winadbasics</code></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="lbl">Vulnerable Parameter:</div>
+                            <div class="val"><code>HTTP Headers</code></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="lbl">Threat Description:</div>
+                            <div class="val">Enforces HTTPS connections to the server.</div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="lbl">Test Payload:</div>
+                            <div class="val"><code>N/A (Passive Header Scan)</code></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="lbl">Evidence Captured:</div>
+                            <div class="val">
+                                <pre>Header 'Strict-Transport-Security' is missing in HTTP response.</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+        
+
+        <!-- Ethical Footer -->
+        <div class="ethical-footer">
+            <p><strong>SECURITY NOTICE:</strong> This report contains confidential findings regarding the tested target. Unauthorized distribution is prohibited.</p>
+            <p>Developed for Academic and Research Purposes. Controlled penetration testing only.</p>
+        </div>
+    </div>
+</body>
+</html>

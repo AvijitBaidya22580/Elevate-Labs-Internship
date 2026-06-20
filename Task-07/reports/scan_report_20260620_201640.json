@@ -1,0 +1,57 @@
+{
+    "target_url": "https://tryhackme.com/room/winadbasics",
+    "scan_time": "2026-06-20 20:16:39",
+    "duration_seconds": 1.22,
+    "pages_crawled_count": 1,
+    "crawled_urls": [
+        "https://tryhackme.com/room/winadbasics"
+    ],
+    "forms_discovered_count": 0,
+    "vulnerabilities_count": 4,
+    "vulnerabilities": [
+        {
+            "vuln_type": "Missing X-Frame-Options Header",
+            "severity": "Low",
+            "evidence": "Header 'X-Frame-Options' is missing in HTTP response.",
+            "description": "Protects against clickjacking attacks.",
+            "owasp_category": "A05:2025-Security Misconfiguration",
+            "url": "https://tryhackme.com/room/winadbasics",
+            "method": "HEAD/GET",
+            "parameter": "HTTP Headers",
+            "payload": "N/A (Passive Header Scan)"
+        },
+        {
+            "vuln_type": "Missing X-Content-Type-Options Header",
+            "severity": "Low",
+            "evidence": "Header 'X-Content-Type-Options' is missing in HTTP response.",
+            "description": "Prevents the browser from MIME-sniffing a response away from the declared content-type.",
+            "owasp_category": "A05:2025-Security Misconfiguration",
+            "url": "https://tryhackme.com/room/winadbasics",
+            "method": "HEAD/GET",
+            "parameter": "HTTP Headers",
+            "payload": "N/A (Passive Header Scan)"
+        },
+        {
+            "vuln_type": "Missing Content-Security-Policy Header",
+            "severity": "Low",
+            "evidence": "Header 'Content-Security-Policy' is missing in HTTP response.",
+            "description": "Restricts resources (such as JavaScript, CSS, Images) that the browser is allowed to load.",
+            "owasp_category": "A05:2025-Security Misconfiguration",
+            "url": "https://tryhackme.com/room/winadbasics",
+            "method": "HEAD/GET",
+            "parameter": "HTTP Headers",
+            "payload": "N/A (Passive Header Scan)"
+        },
+        {
+            "vuln_type": "Missing Strict-Transport-Security Header",
+            "severity": "Low",
+            "evidence": "Header 'Strict-Transport-Security' is missing in HTTP response.",
+            "description": "Enforces HTTPS connections to the server.",
+            "owasp_category": "A05:2025-Security Misconfiguration",
+            "url": "https://tryhackme.com/room/winadbasics",
+            "method": "HEAD/GET",
+            "parameter": "HTTP Headers",
+            "payload": "N/A (Passive Header Scan)"
+        }
+    ]
+}

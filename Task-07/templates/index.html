@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛡️ Web Vulnerability Scanner Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo-section">
+                <div class="logo-icon">🛡️</div>
+                <h1>Web Application Vulnerability Scanner</h1>
+                <span>OWASP 2025</span>
+            </div>
+            <div>
+                <a href="https://github.com/AvijitBaidya22580/Web-Application-Vulnerability-Scanner" target="_blank" class="badge info">GitHub Repo</a>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Sidebar: Controls -->
+            <div class="glass-panel">
+                <h2 class="panel-title">⚡ Scan Controller</h2>
+                
+                <div class="form-group">
+                    <label for="target_url">Target Host URL</label>
+                    <input type="url" id="target_url" class="form-control" placeholder="http://127.0.0.1:5000" value="http://localhost:5000">
+                </div>
+
+                <div class="form-group">
+                    <label for="max_depth">Crawl Max Depth: <span id="depth_val" style="color: var(--accent-primary); font-weight: bold;">2</span></label>
+                    <input type="range" id="max_depth" min="1" max="5" value="2" class="form-control" style="padding: 0;" oninput="document.getElementById('depth_val').innerText = this.value">
+                </div>
+
+                <div class="form-group">
+                    <label for="custom_cookies">Session Cookies (Optional)</label>
+                    <textarea id="custom_cookies" class="form-control" placeholder="PHPSESSID=12345; security=low"></textarea>
+                </div>
+
+                <button id="start_btn" class="btn btn-primary" onclick="startScan()">
+                    <span>🚀 Launch Scanner</span>
+                </button>
+                
+                <button id="stop_btn" class="btn btn-danger" style="display: none; margin-top: 0.75rem;" onclick="stopScan()">
+                    <span>🛑 Cancel Scan</span>
+                </button>
+            </div>
+
+            <!-- Main Content Area -->
+            <div>
+                <!-- Status Bar -->
+                <div class="status-indicator-block">
+                    <div>
+                        <span style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase;">Scan Status</span>
+                        <div style="font-weight: 600; font-size: 1.1rem; margin-top: 0.15rem;" id="progress_status_text">Scanner Idle</div>
+                    </div>
+                    <div id="status_badge" class="status-badge idle">Idle</div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress-container">
+                    <div class="progress-bar-bg">
+                        <div id="progress_bar" class="progress-bar-fill"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span id="progress_percent">0% Completed</span>
+                        <span>Active Scan Engine</span>
+                    </div>
+                </div>
+
+                <!-- Statistics Overview -->
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat_crawled">0</div>
+                        <div class="stat-label">Pages Crawled</div>
+                    </div>
+                    <div class="stat-card critical">
+                        <div class="stat-value" id="stat_critical" style="color: var(--color-critical);">0</div>
+                        <div class="stat-label">Critical (SQLi)</div>
+                    </div>
+                    <div class="stat-card high">
+                        <div class="stat-value" id="stat_high" style="color: var(--color-high);">0</div>
+                        <div class="stat-label">High (XSS)</div>
+                    </div>
+                    <div class="stat-card medium">
+                        <div class="stat-value" id="stat_medium" style="color: var(--color-medium);">0</div>
+                        <div class="stat-label">Medium (CSRF)</div>
+                    </div>
+                    <div class="stat-card low">
+                        <div class="stat-value" id="stat_low" style="color: var(--color-low);">0</div>
+                        <div class="stat-label">Config/Header Issues</div>
+                    </div>
+                </div>
+
+                <!-- Tabbed Results Area -->
+                <div class="glass-panel">
+                    <div class="tabs-header">
+                        <button class="tab-btn active" onclick="switchTab(event, 'tab_vulns')">⚠️ Findings (<span id="tab_vulns_count">0</span>)</button>
+                        <button class="tab-btn" onclick="switchTab(event, 'tab_crawled')">🌐 Crawled URLs (<span id="tab_crawled_count">0</span>)</button>
+                        <button class="tab-btn" onclick="switchTab(event, 'tab_console')">🖥️ Console Logs</button>
+                    </div>
+
+                    <!-- Tab 1: Findings -->
+                    <div id="tab_vulns" class="tab-content active">
+                        <div id="vulns_container">
+                            <div style="text-align: center; padding: 3rem 0; color: var(--text-muted);">
+                                <p style="font-size: 3rem;">🛡️</p>
+                                <p style="margin-top: 1rem; font-size: 0.95rem;">No vulnerabilities detected. Initiate a scan to view results.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Crawled URLs -->
+                    <div id="tab_crawled" class="tab-content">
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width: 60px;">#</th>
+                                        <th>Discovered URL Endpoint</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="crawled_urls_body">
+                                    <tr>
+                                        <td colspan="2" style="text-align: center; color: var(--text-muted); padding: 2rem;">No URLs crawled yet.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Console Logs -->
+                    <div id="tab_console" class="tab-content">
+                        <div class="console-box" id="console_logs">
+                            <div class="console-line info-log">[2026-06-20 20:00:00] Web Scanner UI Initialized. Ready for orders.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Historical Reports Panel -->
+        <div class="glass-panel" style="margin-top: 2rem;">
+            <h2 class="panel-title">📅 Historical Scan Reports</h2>
+            {% if reports %}
+                <div class="history-grid">
+                    {% for report in reports %}
+                        <div class="history-card">
+                            <div class="history-target" title="{{ report.target_url }}">{{ report.target_url }}</div>
+                            <div class="history-meta">📅 Run on: {{ report.scan_time }}</div>
+                            
+                            <div class="history-stats">
+                                <div class="history-stat-item">
+                                    Pages: <span class="history-stat-num">{{ report.pages_crawled_count }}</span>
+                                </div>
+                                <div class="history-stat-item">
+                                    Vulns: <span class="history-stat-num" style="color: {% if report.vulnerabilities_count > 0 %}var(--color-critical){% else %}var(--color-info){% endif %};">{{ report.vulnerabilities_count }}</span>
+                                </div>
+                                <div class="history-stat-item">
+                                    Duration: <span class="history-stat-num">{{ report.duration }}s</span>
+                                </div>
+                            </div>
+                            
+                            <div class="history-actions">
+                                <a href="/reports/view/{{ report.id }}" target="_blank" class="btn btn-primary btn-sm" style="width: auto; flex: 1;">👁️ View</a>
+                                <a href="/reports/download/json/{{ report.id }}" class="btn btn-secondary btn-sm" style="width: auto; background: rgba(255,255,255,0.05); color: var(--text-primary); border: 1px solid var(--border-glass);" download>JSON</a>
+                                <a href="/reports/download/html/{{ report.id }}" class="btn btn-secondary btn-sm" style="width: auto; background: rgba(255,255,255,0.05); color: var(--text-primary); border: 1px solid var(--border-glass);" download>HTML</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                    No historical reports found. Complete a scan to save reports.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Scripting -->
+    <script>
+        let pollingInterval = null;
+        let knownLogCount = 0;
+
+        function switchTab(evt, tabId) {
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            
+            const tabBtns = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < tabBtns.length; i++) {
+                tabBtns[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabId).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        function toggleAccordion(element) {
+            const details = element.nextElementSibling;
+            details.classList.toggle("show");
+        }
+
+        function startScan() {
+            const targetUrl = document.getElementById("target_url").value;
+            const maxDepth = document.getElementById("max_depth").value;
+            const customCookies = document.getElementById("custom_cookies").value;
+
+            if (!targetUrl) {
+                alert("Please enter a target URL");
+                return;
+            }
+
+            // Disable controls
+            document.getElementById("start_btn").disabled = true;
+            document.getElementById("target_url").disabled = true;
+            document.getElementById("max_depth").disabled = true;
+            document.getElementById("custom_cookies").disabled = true;
+            document.getElementById("stop_btn").style.display = "block";
+
+            // Clear statistics
+            updateStats({
+                pages_crawled_count: 0,
+                vulnerabilities: [],
+                crawled_urls: []
+            });
+            document.getElementById("console_logs").innerHTML = '';
+            knownLogCount = 0;
+
+            fetch("/scan/start", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    target_url: targetUrl,
+                    max_depth: maxDepth,
+                    custom_cookies: customCookies
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                    resetControls();
+                } else {
+                    // Start status polling
+                    pollingInterval = setInterval(pollStatus, 1500);
+                }
+            })
+            .catch(err => {
+                console.error("Error starting scan:", err);
+                alert("Failed to start scan");
+                resetControls();
+            });
+        }
+
+        function stopScan() {
+            fetch("/scan/stop", {
+                method: "POST"
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data.message);
+            })
+            .catch(err => console.error("Error stopping scan:", err));
+        }
+
+        function pollStatus() {
+            fetch("/scan/status")
+            .then(res => res.json())
+            .then(data => {
+                // Update Progress UI
+                const pct = data.progress_percentage || 0;
+                document.getElementById("progress_bar").style.width = pct + "%";
+                document.getElementById("progress_percent").innerText = pct + "% Completed";
+                document.getElementById("progress_status_text").innerText = data.progress_text || "Running...";
+                
+                // Update Status Badge
+                const badge = document.getElementById("status_badge");
+                badge.innerText = data.status;
+                badge.className = "status-badge " + data.status.toLowerCase();
+
+                // Update Stats Dashboard
+                updateStats(data);
+
+                // Update Console Logs
+                updateConsole(data.logs || []);
+
+                // Check for completion/stop
+                if (data.status === "completed" || data.status === "stopped") {
+                    clearInterval(pollingInterval);
+                    pollingInterval = null;
+                    resetControls();
+                    // Optional reload history if completed to show new report
+                    if (data.status === "completed") {
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2500);
+                    }
+                }
+            })
+            .catch(err => {
+                console.error("Error polling scan status:", err);
+                clearInterval(pollingInterval);
+                pollingInterval = null;
+                resetControls();
+            });
+        }
+
+        function resetControls() {
+            document.getElementById("start_btn").disabled = false;
+            document.getElementById("target_url").disabled = false;
+            document.getElementById("max_depth").disabled = false;
+            document.getElementById("custom_cookies").disabled = false;
+            document.getElementById("stop_btn").style.display = "none";
+        }
+
+        function updateStats(data) {
+            const vulns = data.vulnerabilities || [];
+            const crawled = data.crawled_urls || [];
+
+            document.getElementById("stat_crawled").innerText = crawled.length;
+            document.getElementById("tab_crawled_count").innerText = crawled.length;
+            document.getElementById("tab_vulns_count").innerText = vulns.length;
+
+            let critical = 0, high = 0, medium = 0, low = 0;
+            vulns.forEach(v => {
+                const sev = v.severity.toLowerCase();
+                if (sev === "critical") critical++;
+                else if (sev === "high") high++;
+                else if (sev === "medium") medium++;
+                else low++; // Low and Info
+            });
+
+            document.getElementById("stat_critical").innerText = critical;
+            document.getElementById("stat_high").innerText = high;
+            document.getElementById("stat_medium").innerText = medium;
+            document.getElementById("stat_low").innerText = low;
+
+            // Render Findings list
+            const vulnsContainer = document.getElementById("vulns_container");
+            if (vulns.length === 0) {
+                vulnsContainer.innerHTML = `
+                    <div style="text-align: center; padding: 3rem 0; color: var(--text-muted);">
+                        <p style="font-size: 3rem;">🛡️</p>
+                        <p style="margin-top: 1rem; font-size: 0.95rem;">No vulnerabilities detected yet.</p>
+                    </div>`;
+            } else {
+                let html = "";
+                vulns.forEach((v, index) => {
+                    const sevClass = v.severity.toLowerCase();
+                    html += `
+                        <div class="vuln-item">
+                            <div class="vuln-header" onclick="toggleAccordion(this)">
+                                <div class="vuln-header-left">
+                                    <span class="badge ${sevClass}">${v.severity}</span>
+                                    <span class="vuln-title">${v.vuln_type}</span>
+                                </div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary);">${v.method} - ${v.url}</div>
+                            </div>
+                            <div class="vuln-details">
+                                <div class="detail-row">
+                                    <div class="detail-label">Vulnerability:</div>
+                                    <div class="detail-value">${v.vuln_type}</div>
+                                </div>
+                                <div class="detail-row">
+                                    <div class="detail-label">OWASP Category:</div>
+                                    <div class="detail-value"><span class="badge info" style="text-transform:none;">${v.owasp_category}</span></div>
+                                </div>
+                                <div class="detail-row">
+                                    <div class="detail-label">Description:</div>
+                                    <div class="detail-value">${v.description}</div>
+                                </div>
+                                <div class="detail-row">
+                                    <div class="detail-label">Endpoint URL:</div>
+                                    <div class="detail-value" style="font-family: monospace;">[${v.method}] ${v.url}</div>
+                                </div>
+                                <div class="detail-row">
+                                    <div class="detail-label">Parameter:</div>
+                                    <div class="detail-value"><code class="detail-code" style="padding:0.1rem 0.3rem;">${v.parameter}</code></div>
+                                </div>
+                                <div class="detail-row">
+                                    <div class="detail-label">Payload:</div>
+                                    <div class="detail-value"><pre class="detail-code">${escapeHtml(v.payload)}</pre></div>
+                                </div>
+                                <div class="detail-row">
+                                    <div class="detail-label">Evidence:</div>
+                                    <div class="detail-value"><pre class="detail-code" style="border-color: rgba(239,68,68,0.2);">${escapeHtml(v.evidence)}</pre></div>
+                                </div>
+                            </div>
+                        </div>`;
+                });
+                vulnsContainer.innerHTML = html;
+            }
+
+            // Render Crawled URLs list
+            const crawledUrlsBody = document.getElementById("crawled_urls_body");
+            if (crawled.length === 0) {
+                crawledUrlsBody.innerHTML = `
+                    <tr>
+                        <td colspan="2" style="text-align: center; color: var(--text-muted); padding: 2rem;">No URLs crawled yet.</td>
+                    </tr>`;
+            } else {
+                let html = "";
+                crawled.forEach((url, idx) => {
+                    html += `
+                        <tr>
+                            <td style="color: var(--text-muted); font-weight: 500;">${idx + 1}</td>
+                            <td><a href="${url}" target="_blank">${url}</a></td>
+                        </tr>`;
+                });
+                crawledUrlsBody.innerHTML = html;
+            }
+        }
+
+        function updateConsole(logs) {
+            const consoleBox = document.getElementById("console_logs");
+            if (logs.length <= knownLogCount) return;
+
+            for (let i = knownLogCount; i < logs.length; i++) {
+                const log = logs[i];
+                let logClass = "info-log";
+                if (log.includes("WARNING:")) logClass = "warn-log";
+                else if (log.includes("ERROR:") || log.includes("CRITICAL:")) logClass = "error-log";
+                else if (log.includes("DEBUG:")) logClass = "debug-log";
+
+                const line = document.createElement("div");
+                line.className = "console-line " + logClass;
+                line.innerText = log;
+                consoleBox.appendChild(line);
+            }
+            knownLogCount = logs.length;
+            consoleBox.scrollTop = consoleBox.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            if (!text) return "";
+            return text
+                .toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
