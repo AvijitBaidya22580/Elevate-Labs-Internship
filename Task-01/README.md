@@ -74,6 +74,31 @@ Follow these steps to complete the module deliverables.
 
 ---
 
+## 🛠️ Practical Implementation: Attack Surface Analyzer Tool
+
+To ground these conceptual models in practice, this task includes a Python-based utility: **`attack_surface_analyzer.py`**. This tool programmatically assesses the digital attack surface of any target domain or IP.
+
+### Features
+1. **Port Scanning:** Scans standard target ports (SSH, FTP, HTTP, HTTPS, RDP, etc.) to discover open ports.
+2. **Security Header Auditing:** Interrogates target HTTP(S) responses to check for defensive security configurations like:
+   - `Content-Security-Policy` (CSP)
+   - `X-Frame-Options`
+   - `X-Content-Type-Options`
+   - `Strict-Transport-Security` (HSTS)
+   - `Referrer-Policy`
+3. **Information Leakage Detection:** Checks for exposed web server signatures (e.g. `Server` banner).
+4. **SSL/TLS Auditing:** Inspects active SSL/TLS certificates and calculates expiry window metrics.
+5. **Risk Scoring:** Assigns a priority weight and outputs a structured vulnerability rating with defensive suggestions.
+
+### How to Run
+Run the tool using standard Python:
+```bash
+python attack_surface_analyzer.py <target_domain>
+```
+*Example:* `python attack_surface_analyzer.py google.com`
+
+---
+
 ## 📦 Deliverables
 
 Create a single document (PDF or DOCX) structured as follows:
