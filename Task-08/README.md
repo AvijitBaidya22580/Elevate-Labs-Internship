@@ -1,4 +1,4 @@
-# Task-8-SQL-Injection-Practical-Exploitation
+# 💉 Task 8: SQL Injection Practical Exploitation
 
 This repository contains documentation and a step-by-step walkthrough for **Task 8: Advanced SQL Injection (SQLi) Exploitation**. This project is designed for educational purposes, focusing on the identification, manual verification, and automated exploitation of SQL injection vulnerabilities in a controlled lab environment.
 

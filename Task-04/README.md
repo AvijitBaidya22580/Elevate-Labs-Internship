@@ -1,6 +1,4 @@
-# Task-4-Password-Security-Authentication-Analysis
-
-# Task 4: Password Security & Authentication Analysis
+# 🔑 Task 4: Password Security & Authentication Analysis
 
 ## 1. Introduction
 

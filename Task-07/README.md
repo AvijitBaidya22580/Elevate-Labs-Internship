@@ -1,4 +1,4 @@
-# Task-7-Web-Application-Vulnerability-Testing
+# 🌐 Task 7: Web Application Vulnerability Testing
 
 A comprehensive cybersecurity project demonstrating manual and automated web application penetration testing. This repository documents the methodology, tools, and findings from testing intentionally vulnerable applications to understand common security flaws and their mitigations.
 

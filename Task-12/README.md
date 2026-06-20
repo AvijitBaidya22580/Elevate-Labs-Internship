@@ -1,4 +1,4 @@
-# Task-12-Log-Monitoring-Analysis
+# 📋 Task 12: Log Monitoring & Analysis
 
 🔍 Splunk Log Analysis & Incident Detection Project 📌 Project Overview
 

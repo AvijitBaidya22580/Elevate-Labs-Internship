@@ -1,4 +1,4 @@
-# Task 10: Firewall Configuration & Testing
+# 🧱 Task 10: Firewall Configuration & Testing
 
 This repository contains the documentation and practical implementation guide for **Task 10: Firewall Configuration & Testing**. This module focuses on network defense fundamentals, specifically the implementation of host-based firewalls to control incoming and outgoing network traffic.
 

@@ -1,4 +1,4 @@
-# Task-6-Introduction-to-Cryptography
+# 🔐 Task 6: Introduction to Cryptography
 
 ## Project Overview
 
@@ -160,8 +160,8 @@ To reproduce the experiments in this repository:
 
 2. **Clone the Repository:**
 ```bash
-git clone https://github.com/username/intro-to-cryptography.git
-cd intro-to-cryptography
+git clone https://github.com/AvijitBaidya22580/Elevate-Labs-Internship.git
+cd Elevate-Labs-Internship/Task-06
 
 ```
 
